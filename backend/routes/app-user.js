@@ -4,9 +4,10 @@ const { initModels } = require('../models/init-models');
 const {sequelize} = require("./../models");
 
 router.get('/', async (req, res) => {
-    const { USER } = initModels(sequelize);
+    const { User } = initModels(sequelize);
     try {
-        const users = await USER.findAll();
+        const users = await User.findAll();
+        console.log(JSON.stringify(users))
         res.json(users);
     } catch (error) {
         console.error(error);
