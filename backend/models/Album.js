@@ -2,24 +2,24 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Album', {
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: true,
-      primaryKey: true
+      primaryKey: true,
+      unique: true
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    coverImage: {
-      type: DataTypes.TEXT,
+    cover_image: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    releaseDate: {
+    release_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
-    artistId: {
+    artist_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -30,6 +30,15 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'Album',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        name: "sqlite_autoindex_Album_1",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
   });
 };

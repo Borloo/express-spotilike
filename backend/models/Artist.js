@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       primaryKey: true
     },
-    artistName: {
+    name: {
       type: DataTypes.TEXT,
       allowNull: true
     },

@@ -1,35 +1,35 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Track_Artist', {
-    trackId: {
+  return sequelize.define('Song_Album', {
+    song_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Track',
+        model: 'Song',
         key: 'id'
       },
       unique: true
     },
-    artistId: {
+    album_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Artist',
+        model: 'Album',
         key: 'id'
       },
       unique: true
     }
   }, {
     sequelize,
-    tableName: 'Track_Artist',
+    tableName: 'Song_Album',
     timestamps: false,
     indexes: [
       {
-        name: "sqlite_autoindex_Track_Artist_1",
+        name: "sqlite_autoindex_Song_Album_1",
         unique: true,
         fields: [
-          { name: "trackId" },
-          { name: "artistId" },
+          { name: "song_id" },
+          { name: "album_id" },
         ]
       },
     ]
