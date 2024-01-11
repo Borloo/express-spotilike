@@ -1,21 +1,21 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Track', {
+  return sequelize.define('Song', {
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: true,
-      primaryKey: true
+      primaryKey: true,
+      unique: true
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     duration: {
-      type: DataTypes.TIME,
+      type: DataTypes.INTEGER,
       allowNull: true
     },
-    artistId: {
+    artist_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -23,15 +23,15 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    genreId: {
+    gender_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'Genre',
+        model: 'Gender',
         key: 'id'
       }
     },
-    albumId: {
+    album_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
@@ -41,7 +41,16 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'Track',
-    timestamps: false
+    tableName: 'Song',
+    timestamps: false,
+    indexes: [
+      {
+        name: "sqlite_autoindex_Song_1",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
   });
 };
