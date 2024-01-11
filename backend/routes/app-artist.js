@@ -35,4 +35,20 @@ router.get('/:id/songs', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const artist_id = req.params.id;
+    try {
+        const artist = await Artist.findByPk(artist_id);
+        if (!artist){
+            res.status(409).json({ error: 'Unknow artist id: ' + artist });
+            return;
+        }
+        await artist.update(req.body);
+        res.status(201).json(artist);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
