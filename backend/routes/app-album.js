@@ -4,7 +4,7 @@ const {initModels} = require('../models/init-models');
 const {sequelize} = require("./../models");
 const ModelService = require('./../services/ModelService');
 
-const {Album, Artist} = initModels(sequelize);
+const {Album, Artist, Song, Gender} = initModels(sequelize);
 const modelService = new ModelService();
 
 router.get('/', async (req, res) => {
@@ -78,6 +78,55 @@ router.post('/', async (req, res) => {
             artist_id
         });
         res.status(201).json(album);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/:id/songs', async (req, res) => {
+    const album_id = req.params.id;
+    const { title, duration, artist_id, gender_id} = req.body;
+    try {
+        if (!title){
+            res.status(400).json({ error: 'Title required' });
+            return;
+        }
+        if (!duration){
+            res.status(400).json({ error: 'Duration (s) required' });
+            return;
+        }
+        if (!artist_id){
+            res.status(400).json({ error: 'Artist id required' });
+            return;
+        }
+        if (!gender_id){
+            res.status(400).json({ error: 'Gender id required' });
+            return;
+        }
+        const album = await Album.findByPk(album_id);
+        if (!album){
+            res.status(409).json({error: 'Unknow album id: ' + album_id});
+            return;
+        }
+        const artist = await Artist.findByPk(artist_id);
+        if (!artist){
+            res.status(409).json({error: 'Unknow artist id: ' + artist_id});
+            return;
+        }
+        const gender = await Gender.findByPk(gender_id);
+        if (!gender){
+            res.status(409).json({error: 'Unknow gender id: ' + gender_id});
+            return;
+        }
+        const newSong = await Song.create({
+            title,
+            duration,
+            artist_id,
+            gender_id,
+            album_id
+        });
+        res.status(201).json(newSong);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
