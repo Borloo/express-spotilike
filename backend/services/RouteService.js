@@ -1,4 +1,5 @@
 const userRoutes = require('./../routes/app-user');
+const genreRoutes = require('./../routes/app-genre');
 
 class RouteService{
 
@@ -8,6 +9,7 @@ class RouteService{
 
     init_routes(){
         this.app.use('/users', userRoutes);
+        this.app.use('/genres', genreRoutes)
     }
 }
 
