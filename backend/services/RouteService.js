@@ -7,10 +7,6 @@ class RouteService{
     }
 
     init_routes(){
-        this.set_users();
-    }
-
-    set_users(){
         this.app.use('/users', userRoutes);
     }
 }
