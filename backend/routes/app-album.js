@@ -133,4 +133,20 @@ router.post('/:id/songs', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const album_id = req.params.id;
+    try {
+        const album = await Album.findByPk(album_id);
+        if (!album){
+            res.status(409).json({error: 'Unknow album id: ' + album_id});
+            return;
+        }
+        await album.update(req.body);
+        res.status(201).json(album);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
