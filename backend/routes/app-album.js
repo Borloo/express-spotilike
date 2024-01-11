@@ -149,4 +149,20 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    const album_id = req.params.id;
+    try {
+        const album = await Album.findByPk(album_id);
+        if (!album){
+            res.status(409).json({error: 'Unknow album id: ' + album_id});
+            return;
+        }
+        await album.destroy();
+        res.status(200).json({message: "Album id: " + album_id + " deleted"});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 module.exports = router;
