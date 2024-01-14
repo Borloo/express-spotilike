@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { initModels } = require('../models/init-models');
 const {sequelize} = require("./../models");
-const jwt = require('jsonwebtoken');
+const JwtService = require('./../services/JwtService');
+const secret_key = "secret_key";
 
 const { User } = initModels(sequelize);
+const jwtService = new JwtService(secret_key);
 
 router.get('/', async (req, res) => {
     try {
@@ -75,7 +77,7 @@ router.post('/login', async (req, res) => {
             res.status(400).json({ error: 'Wrong password' });
             return;
         }
-        const token = jwt.sign({user_id: user.id}, 'secret_key');
+        const token = jwtService.generate_token({user_id: user.id})
         res.status(201).json(token);
     } catch (error) {
         console.error(error);
@@ -83,7 +85,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", jwtService.authenticate_token.bind(jwtService), async (req, res) => {
     const user_id = req.params.id;
     try{
         const user = await User.findByPk(user_id);
