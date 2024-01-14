@@ -3,9 +3,11 @@ const router = express.Router();
 const {initModels} = require('../models/init-models');
 const {sequelize} = require("./../models");
 const ModelService = require('./../services/ModelService');
+const JwtService = require('./../services/JwtService');
 
 const {Album, Artist, Song, Gender} = initModels(sequelize);
 const modelService = new ModelService();
+const jwtService = new JwtService();
 
 router.get('/', async (req, res) => {
     try {
@@ -149,7 +151,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', jwtService.authenticate_token.bind(jwtService), async (req, res) => {
     const album_id = req.params.id;
     try {
         const album = await Album.findByPk(album_id);

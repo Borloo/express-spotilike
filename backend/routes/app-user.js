@@ -3,10 +3,9 @@ const router = express.Router();
 const { initModels } = require('../models/init-models');
 const {sequelize} = require("./../models");
 const JwtService = require('./../services/JwtService');
-const secret_key = "secret_key";
 
 const { User } = initModels(sequelize);
-const jwtService = new JwtService(secret_key);
+const jwtService = new JwtService();
 
 router.get('/', async (req, res) => {
     try {

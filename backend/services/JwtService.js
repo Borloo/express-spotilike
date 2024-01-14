@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
+const secret_key = "secret_key";
 
 class JwtService{
 
-    constructor(secret_key) {
-        this.secret_key = secret_key;
+    constructor() {
     }
 
     generate_token(data){
-        return jwt.sign(data, this.secret_key)
+        return jwt.sign(data, secret_key)
     }
 
     authenticate_token(req, res, next){
@@ -21,7 +21,7 @@ class JwtService{
 
     verify_token(token){
         try {
-            return jwt.verify(token.split(" ")[1], this.secret_key);
+            return jwt.verify(token.split(" ")[1], secret_key);
         } catch (error){
             return null;
         }
