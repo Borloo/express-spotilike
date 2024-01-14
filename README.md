@@ -514,6 +514,17 @@ const appService = new AppService(app, sequelize, PORT);
 appService.init_app();
 ```
 
+## Lancer l'application
+
+```bash
+npm run start_backend
+```
+
+Puis dans un autre terminal
+```bash
+npm run start_frontend
+```
+
 ## Tester l'API
 
 Comme présenter au début, pour tester ce projet il est possible d'utiliser Postman, un outil très pratique qui sert 
