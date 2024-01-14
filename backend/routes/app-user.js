@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { initModels } = require('../models/init-models');
 const {sequelize} = require("./../models");
+const jwt = require('jsonwebtoken');
 
 const { User } = initModels(sequelize);
 
@@ -44,6 +45,38 @@ router.post('/signin', async (req, res) => {
             email,
         });
         res.status(201).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    if (!email){
+        res.status(400).json({ error: 'Email required' });
+        return;
+    }
+    if (!password){
+        res.status(400).json({ error: 'Password required' });
+        return;
+    }
+    try {
+        const user = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+        if (!user){
+            res.status(400).json({ error: 'User unknown' });
+            return;
+        }
+        if (password !== user.password){
+            res.status(400).json({ error: 'Wrong password' });
+            return;
+        }
+        const token = jwt.sign({user_id: user.id}, 'secret_key');
+        res.status(201).json(token);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
