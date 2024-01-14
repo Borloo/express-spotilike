@@ -157,6 +157,11 @@ router.delete('/:id', async (req, res) => {
             res.status(409).json({error: 'Unknow album id: ' + album_id});
             return;
         }
+        await Song.destroy({
+            where: {
+                album_id: album_id
+            }
+        });
         await album.destroy();
         res.status(200).json({message: "Album id: " + album_id + " deleted"});
     } catch (error) {
