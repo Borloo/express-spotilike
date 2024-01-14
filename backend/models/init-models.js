@@ -19,7 +19,7 @@ function initModels(sequelize) {
   var User = _User(sequelize, DataTypes);
 
   Song.belongsTo(Album, { as: "album", foreignKey: "album_id"});
-  Album.hasMany(Song, { as: "Songs", foreignKey: "album_id"});
+  Album.hasMany(Song, { as: "songs", foreignKey: "album_id"});
   Song_Album.belongsTo(Album, { as: "album", foreignKey: "album_id"});
   Album.hasMany(Song_Album, { as: "Song_Albums", foreignKey: "album_id"});
   Album.belongsTo(Artist, { as: "artist", foreignKey: "artist_id"});
