@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Track', {
+  return sequelize.define('Song', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -8,40 +8,28 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     duration: {
-      type: DataTypes.TIME,
+      type: DataTypes.INTEGER,
       allowNull: true
     },
-    artistId: {
+    artist_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Artist',
-        key: 'id'
-      }
+      allowNull: true
     },
-    genreId: {
+    gender_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Genre',
-        key: 'id'
-      }
+      allowNull: true
     },
-    albumId: {
+    album_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Album',
-        key: 'id'
-      }
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'Track',
+    tableName: 'Song',
     timestamps: false
   });
 };

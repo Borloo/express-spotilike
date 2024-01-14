@@ -8,24 +8,20 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     title: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    coverImage: {
-      type: DataTypes.TEXT,
+    cover_image: {
+      type: DataTypes.STRING(255),
       allowNull: true
     },
-    releaseDate: {
+    release_date: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
-    artistId: {
+    artist_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Artist',
-        key: 'id'
-      }
+      allowNull: true
     }
   }, {
     sequelize,
