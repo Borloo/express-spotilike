@@ -35,7 +35,7 @@ export class ArtistsListComponent implements OnInit, OnDestroy{
       next: artists => {
         this.artists = artists;
       },
-      error:err => this.error_message = err
+      error: err => this.error_message = err
     });
   }
 }

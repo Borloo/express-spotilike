@@ -1,0 +1,26 @@
+<div *ngIf="albums">
+  <table class="table table-striped table-responsive">
+    <thead>
+    <th class="id">#</th>
+    <th class="cover">Cover</th>
+    <th class="title">Title</th>
+    <th class="release">Release</th>
+    <th class="artist">Artist</th>
+    <th class="action"></th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let album of albums">
+      <th scope="row">{{album.id}}</th>
+      <td>
+        <img class="img-cover" src="assets/covers/{{album.cover_image}}" alt="Artist avatar">
+      </td>
+      <td>{{album.title}}</td>
+      <td>{{album.release_date}}</td>
+      <td>{{album.artist.name}}</td>
+      <td>
+        <div class="btn btn-primary">SHOW</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

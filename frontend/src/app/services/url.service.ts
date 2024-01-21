@@ -17,9 +17,23 @@ export class UrlService {
     delete_artists: `${this.api_url}artists/{id}`,
   }
 
+  private album_route = {
+    get_albums: `${this.api_url}albums`,
+    get_album_by_id: `${this.api_url}albums/{id}`,
+    get_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+    post_album: `${this.api_url}albums`,
+    post_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+    put_album_by_id: `${this.api_url}albums/{id}`,
+    delete_album_by_id: `${this.api_url}albums/{id}`,
+  }
+
   constructor(
     private readonly app_service: AppService
   ) { }
+
+  get_albums_routes(){
+    return this.album_route;
+  }
 
   get_artists_routes(){
     return this.artist_route;

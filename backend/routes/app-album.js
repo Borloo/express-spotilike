@@ -11,7 +11,15 @@ const jwtService = new JwtService();
 
 router.get('/', async (req, res) => {
     try {
-        const albums = await Album.findAll(modelService.get_album_model());
+        const albums = await Album.findAll({
+            attributes: {
+                exclude: ['artist_id']
+            },
+            include: {
+                model: Artist,
+                as: 'artist'
+            }
+        });
         res.status(201).json(albums);
     } catch (error) {
         console.error(error);
