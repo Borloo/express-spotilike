@@ -15,6 +15,8 @@ export class ArtistsListComponent implements OnInit, OnDestroy{
 
   artists: Artist[] = [];
 
+  currentArtist!: Artist | null;
+
   artist_id: number = 0;
 
   constructor(
@@ -37,5 +39,12 @@ export class ArtistsListComponent implements OnInit, OnDestroy{
       },
       error: err => this.error_message = err
     });
+  }
+
+  setCurrentArtist(artist: Artist) {
+    this.currentArtist = null;
+    setTimeout(() => {
+      this.currentArtist = artist;
+    }, 10)
   }
 }

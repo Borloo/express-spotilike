@@ -1,22 +1,29 @@
-<div *ngIf="artists">
-  <table class="table table-striped table-responsive">
-    <thead>
-    <th class="id">#</th>
-    <th class="avatar">Avatar</th>
-    <th class="name">Name</th>
-    <th class="action"></th>
-    </thead>
-    <tbody>
-    <tr *ngFor="let artist of artists">
-      <th scope="row">{{artist.id}}</th>
-      <td>
+<h3 class="titles-artists">
+  Artists
+</h3>
+<div *ngIf="artists" class="row gap-3">
+  <div *ngFor="let artist of artists" class="col-3 card-artist">
+    <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
+       [routerLink]="['/artist/detail', artist.id]" routerLinkActive="activeLinkClass" href="#">
+      <div class="d-flex justify-content-center align-items-center">
         <img class="img-avatar" src="assets/avatars/{{artist.avatar}}" alt="Artist avatar">
-      </td>
-      <td>{{artist.name}}</td>
-      <td>
-        <div class="btn btn-primary">SHOW</div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+      </div>
+      <div class="p-2">
+        <h3 class="m-0">
+          {{ artist.name }}
+        </h3>
+        <p class="artist-annotation small">Artist</p>
+      </div>
+    </a>
+  </div>
+    <div *ngIf="artists.length%3 != 0" class="col-3 card-artist">
+      <a class="h-100 w-100" routerLinkActive="activeLinkClass" href="#">
+          <h3 class="m-0">
+            Artists
+          </h3>
+        <div class="position-absolute bottom-0">
+          <i class="fa-solid fa-arrow-right fa-2xl"></i>
+        </div>
+      </a>
+    </div>
 </div>
