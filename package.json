@@ -2,14 +2,13 @@
   "name": "express-spotilike",
   "version": "1.0.0",
   "description": "",
-  "main": " ",
+  "main": "",
   "scripts": {
     "install-project-dependencies": "npm-run-all install-backend-dependencies install-frontend-dependencies",
     "install-backend-dependencies": "npm install --prefix backend",
     "install-frontend-dependencies": "npm install --prefix frontend",
     "start-backend": "npm run --prefix backend start",
-    "start-frontend": "npm run --prefix frontend start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-frontend": "npm run --prefix frontend start"
   },
   "repository": {
     "type": "git",
