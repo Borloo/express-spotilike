@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { ArtistsListComponent } from './artists-list/artists-list.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AlbumsListComponent } from './albums-list/albums-list.component';
+import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ArtistsListComponent,
-    AlbumsListComponent
+    AlbumsListComponent,
+    ArtistDetailComponent
   ],
   imports: [
     BrowserModule,
