@@ -4,7 +4,7 @@
 <div *ngIf="artists" class="row gap-3">
   <div *ngFor="let artist of artists" class="col-3 card-artist">
     <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
-       [routerLink]="['/artist/', artist.id]" routerLinkActive="activeLinkClass" href="#">
+       [routerLink]="['/artist/detail', artist.id]" routerLinkActive="activeLinkClass" href="#">
       <div class="d-flex justify-content-center align-items-center">
         <img class="img-avatar" src="assets/avatars/{{artist.avatar}}" alt="Artist avatar">
       </div>

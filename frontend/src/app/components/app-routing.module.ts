@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {ArtistDetailComponent} from "./artist-detail/artist-detail.component";
 
 const routes: Routes = [
-  {path: 'artist/:id', component: ArtistDetailComponent, pathMatch: 'full'},
-];
+  {
+    path: 'artist',
+    loadChildren: () => import('./artists-list/artist-routing.module').then(a => a.ArtistsRoutingModule),
+  },
+  {path: '', redirectTo: 'artist/list', pathMatch: 'full'},
+ ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

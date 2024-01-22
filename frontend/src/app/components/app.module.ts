@@ -7,6 +7,7 @@ import { ArtistsListComponent } from './artists-list/artists-list.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AlbumsListComponent } from './albums-list/albums-list.component';
 import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
+import {ArtistsRoutingModule} from "./artists-list/artist-routing.module";
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
   ],
   imports: [
     BrowserModule,
+    ArtistsRoutingModule,
     AppRoutingModule,
     HttpClientModule
   ],
