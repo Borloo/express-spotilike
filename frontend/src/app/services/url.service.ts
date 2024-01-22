@@ -27,6 +27,10 @@ export class UrlService {
     delete_album_by_id: `${this.api_url}albums/{id}`,
   }
 
+  private user_route = {
+    post_user_login: `${this.api_url}users/login`
+  }
+
   constructor(
     private readonly app_service: AppService
   ) { }
@@ -37,6 +41,10 @@ export class UrlService {
 
   get_artists_routes(){
     return this.artist_route;
+  }
+
+  get_users_routes() {
+    return this.user_route;
   }
 
   handle_error(err: HttpErrorResponse): Observable<never>{
