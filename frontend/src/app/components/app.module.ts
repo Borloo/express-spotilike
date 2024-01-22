@@ -7,8 +7,9 @@ import { ArtistsListComponent } from './artists-list/artists-list.component';
 import {HttpClientModule} from "@angular/common/http";
 import { AlbumsListComponent } from './albums-list/albums-list.component';
 import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import {FooterComponent} from "./footer/footer.component";
 import {ArtistsRoutingModule} from "./artists-list/artist-routing.module";
-import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { FooterComponent } from './footer/footer.component';
     ArtistsListComponent,
     AlbumsListComponent,
     ArtistDetailComponent,
-    FooterComponent
+    FooterComponent,
+    AlbumsListComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,

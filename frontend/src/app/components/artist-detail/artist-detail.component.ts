@@ -14,22 +14,22 @@ export class ArtistDetailComponent implements OnInit{
   error_message: string = "";
   sub!: Subscription;
 
+  @Input()
   artist!: Artist;
-  artist_id: number = 0;
 
 constructor(private artistService: ArtistService,
             private route: ActivatedRoute) { }
 
 
   ngOnInit() {
-    // this.route.paramMap.subscribe(params => {
-    //   if (params.has('id')) {
-    //     let idArtist = params.get('id');
-    //     if (idArtist != null) {
-    //       this.set_artist(idArtist);
-    //     }
-    //   }
-    // });
+    this.route.paramMap.subscribe(params => {
+      if (params.has('id')) {
+        let idArtist = params.get('id');
+        if (idArtist != null) {
+          this.set_artist(idArtist);
+        }
+      }
+    });
   }
 
   private set_artist(artist_id: string): void{
