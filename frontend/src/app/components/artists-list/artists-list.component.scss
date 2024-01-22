@@ -10,7 +10,6 @@ $secondary-color: #b0b0b0;
 }
 
 .card-artist {
-  padding: 20px;
   color: white !important;
   background-image: linear-gradient(to right top, #222324, #2e3031, #3c3e3e, #4a4c4b, #5a5b59);
   border: 1px solid #464141;
@@ -35,6 +34,8 @@ a {
   max-width: 200px;
   max-height: 200px;
   border-radius: 50%;
+  object-fit: cover;
+  overflow: hidden;
 }
 
 .artist-annotation {
