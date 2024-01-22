@@ -8,13 +8,15 @@ import {HttpClientModule} from "@angular/common/http";
 import { AlbumsListComponent } from './albums-list/albums-list.component';
 import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
 import {ArtistsRoutingModule} from "./artists-list/artist-routing.module";
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ArtistsListComponent,
     AlbumsListComponent,
-    ArtistDetailComponent
+    ArtistDetailComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
