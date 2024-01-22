@@ -2,15 +2,29 @@ const express = require('express');
 const router = express.Router();
 const { initModels } = require('../models/init-models');
 const {sequelize} = require("./../models");
-const JwtService = require('./../services/JwtService');
+const AuthenticationService = require('../services/AuthenticationService');
 
 const { User } = initModels(sequelize);
-const jwtService = new JwtService();
+const authenticationService = new AuthenticationService();
 
 router.get('/', async (req, res) => {
     try {
         const users = await User.findAll();
         res.json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/me', authenticationService.authenticate_token.bind(authenticationService), async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user){
+            res.status(400).json({ error: 'Not connected, please login' });
+            return;
+        }
+        res.status(201).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -42,8 +56,8 @@ router.post('/signin', async (req, res) => {
         }
         const user = await User.create({
             username,
-            password,
-            email,
+            password: authenticationService.generate_hached_password(password),
+            email
         });
         res.status(201).json(user);
     } catch (error) {
@@ -72,11 +86,11 @@ router.post('/login', async (req, res) => {
             res.status(400).json({ error: 'User unknown' });
             return;
         }
-        if (password !== user.password){
+        if (!authenticationService.compare_password(password, user.password)){
             res.status(400).json({ error: 'Wrong password' });
             return;
         }
-        const token = jwtService.generate_token({user_id: user.id})
+        const token = authenticationService.generate_token({user_id: user.id})
         res.status(201).json(token);
     } catch (error) {
         console.error(error);
@@ -84,7 +98,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.delete("/:id", jwtService.authenticate_token.bind(jwtService), async (req, res) => {
+router.delete("/:id", authenticationService.authenticate_token.bind(authenticationService), async (req, res) => {
     const user_id = req.params.id;
     try{
         const user = await User.findByPk(user_id);
