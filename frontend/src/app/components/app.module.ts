@@ -9,10 +9,11 @@ import { AlbumsListComponent } from './albums-list/albums-list.component';
 import { ArtistDetailComponent } from './artist-detail/artist-detail.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import {FooterComponent} from "./footer/footer.component";
-import {ArtistsRoutingModule} from "./artists-list/artist-routing.module";
 import {AccountRoutingModule} from "./account/account-routing.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./account/login/login.component";
+import { HomeComponent } from './home/home.component';
+import {HomeRoutingModule} from "./home/home-routing.module";
 
 @NgModule({
   declarations: [
@@ -23,12 +24,13 @@ import {LoginComponent} from "./account/login/login.component";
     FooterComponent,
     AlbumsListComponent,
     NavigationComponent,
-    LoginComponent
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    ArtistsRoutingModule,
     AccountRoutingModule,
+    HomeRoutingModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule
