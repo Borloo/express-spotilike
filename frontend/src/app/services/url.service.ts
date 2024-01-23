@@ -12,6 +12,7 @@ export class UrlService {
 
   private artist_route = {
     get_artists: `${this.api_url}artists`,
+    get_artists_by_id: `${this.api_url}artists/{id}`,
     get_artists_song: `${this.api_url}artists/{id}/songs`,
     put_artists: `${this.api_url}artists/{id}`,
     delete_artists: `${this.api_url}artists/{id}`,

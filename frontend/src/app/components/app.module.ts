@@ -14,6 +14,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./account/login/login.component";
 import { HomeComponent } from './home/home.component';
 import {HomeRoutingModule} from "./home/home-routing.module";
+import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {HomeRoutingModule} from "./home/home-routing.module";
     BrowserModule,
     AccountRoutingModule,
     HomeRoutingModule,
+    ArtistsRoutingModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule

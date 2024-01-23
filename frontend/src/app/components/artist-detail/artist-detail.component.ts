@@ -16,29 +16,36 @@ export class ArtistDetailComponent implements OnInit{
 
   @Input()
   artist!: Artist;
+  artist_id: string = '';
 
 constructor(private artistService: ArtistService,
             private route: ActivatedRoute) { }
 
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      if (params.has('id')) {
-        let idArtist = params.get('id');
-        if (idArtist != null) {
-          this.set_artist(idArtist);
+    this.route.paramMap.subscribe({
+      next: params => {
+        if (params.has('id')) {
+          let idArtist = params.get('id');
+          if (idArtist != null) {
+            this.artist_id = idArtist;
+          }
         }
-      }
+      },
+      error: err => this.error_message = err
     });
+    this.set_artist();
   }
 
-  private set_artist(artist_id: string): void{
-    this.sub = this.artistService.get_by_id(artist_id).subscribe({
+  private set_artist(): void{
+    this.sub = this.artistService.get_by_id(this.artist_id).subscribe({
       next: artist => {
         this.artist = artist;
       },
       error: err => this.error_message = err
     })
   }
+
+  protected readonly console = console;
 }
 

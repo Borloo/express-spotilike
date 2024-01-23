@@ -1,14 +1,8 @@
 <div class="container">
-  <h3 class="titles-artists">
-    Artists
-  </h3>
-  <h1 class="font-bold underline bg-white px-6 pt-10 pb-8">
-test ici tailwind
-  </h1>
   <div *ngIf="artists" class="row gap-3">
     <div *ngFor="let artist of artists" class="col-2 card-artist">
       <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
-         [routerLink]="['/artist/detail', artist.id]" routerLinkActive="activeLinkClass" href="#">
+         [routerLink]="['/artists/', artist.id]" routerLinkActive="activeLinkClass" href="#">
         <div class="d-flex justify-content-center align-items-center">
           <img class="img-avatar" src="assets/avatars/{{artist.avatar}}" alt="Artist avatar">
         </div>

@@ -15,7 +15,7 @@ export class ArtistService {
   ) { }
 
   get_by_id(id: string): Observable<Artist>{
-    let url_replace = this.url_service.get_artists_routes().get_artists_song.replace('{id}', id)
+    let url_replace = this.url_service.get_artists_routes().get_artists_by_id.replace('{id}', id);
     return this.http.get<Artist>(url_replace)
       .pipe(
         tap(data => console.log('Artist', JSON.stringify(data))),

@@ -1,13 +1,4 @@
-$main-color : #4a4c4b;
-$secondary-color: #b0b0b0;
-
-.titles-artists {
-  color: $main-color;
-  width: fit-content;
-  padding: 10px;
-  border-radius: 20px;
-
-}
+@import '../../../styles.scss';
 
 .card-artist {
   padding: 20px;

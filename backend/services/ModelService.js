@@ -39,6 +39,20 @@ class ModelService{
             ]
         }
     }
+
+    get_artist_with_songs(){
+        return {
+            include: [
+                {
+                    model: Song,
+                    as: 'Songs',
+                    attributes: {
+                        exclude: ['artist_id']
+                    }
+                }
+            ]
+        }
+    }
 }
 
 module.exports = ModelService

@@ -1,11 +1,11 @@
 <div class="d-flex justify-content-between w-100">
   <div class="menu-item">
     <a href="#">
-      <img src="assets/images/spotilike.png" alt="" width="30" height="24">
+      <img class="img-logo-footer spotilike" src="assets/images/spotilike.png" alt="Logo Spotilike">
       Spotilike
     </a>
   </div>
   <div class="menu-item">
-    <button [routerLink]="['/account/login']" type="button" class="btn btn-success">Login</button>
+    <button *ngIf="!this.is_auth" [routerLink]="['/account/login']" type="button" class="btn btn-outline-success">Login</button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {UrlService} from "./url.service";
 import {catchError, tap} from "rxjs";
@@ -13,9 +13,10 @@ export class AuthenticationService {
   constructor(
     private readonly http: HttpClient,
     private readonly url_service: UrlService
-  ) { }
+  ) {
+  }
 
-  login(email: string, password: string){
+  login(email: string, password: string) {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -26,8 +27,12 @@ export class AuthenticationService {
       password
     }, httpOptions)
       .pipe(
-        tap(data => console.log('Identified', JSON.stringify(data))),
+        tap(data => this.is_auth = true),
         catchError(this.url_service.handle_error)
       );
+  }
+
+  isLogged(): boolean {
+    return this.is_auth;
   }
 }
