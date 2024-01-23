@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-2">
+    <div class="btn btn-artists" id="btn-artists" (click)="click_artists()">
+      <h3 style="text-align: end">Artists</h3>
+    </div>
+  </div>
+  <div class="col-md-2"></div>
+  <div class="col-md-2">
+    <div class="btn btn-albums" id="btn-albums" (click)="click_albums()">
+      <h3 style="text-align: end">Albums</h3>
+    </div>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+<div class="row">
+  <div *ngIf="this.artists;then artists_content else albums_content">
+  </div>
+  <ng-template #artists_content>
+    <app-artists-list></app-artists-list>
+  </ng-template>
+  <ng-template #albums_content>
+    <app-albums-list></app-albums-list>
+  </ng-template>
+</div>
