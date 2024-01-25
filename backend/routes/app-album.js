@@ -30,7 +30,32 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const album_id = req.params.id;
     try {
-        const album = await Album.findByPk(album_id, modelService.get_album_model());
+        const album = await Album.findByPk(album_id, {
+            include: [
+                {
+                    model: Artist,
+                    as: 'artist',
+                    include: [
+                        {
+                            model: Song,
+                            as: 'Songs',
+                            include: [
+                                {
+                                    model: Gender,
+                                    as: 'gender'
+                                }
+                            ],
+                            attributes: {
+                                exclude: ['artist_id', 'album_id', 'gender_id']
+                            }
+                        }
+                    ]
+                }
+            ],
+            attributes: {
+                exclude: ['artist_id']
+            }
+        });
         if (!album) {
             res.status(409).json({error: 'Unknow album id: ' + album_id});
             return;
