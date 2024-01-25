@@ -1,6 +1,6 @@
 <div class="container">
-  <div *ngIf="artists" class="row gap-3">
-    <div *ngFor="let artist of artists" class="col-2 card-artist">
+  <div *ngIf="artists" class="row gy-3 mt-4 justify-content-center">
+    <div *ngFor="let artist of artists" class="col-3 me-4 card-artist">
       <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
          [routerLink]="['/artists/', artist.id]" routerLinkActive="activeLinkClass" href="#">
         <div class="d-flex justify-content-center align-items-center">
