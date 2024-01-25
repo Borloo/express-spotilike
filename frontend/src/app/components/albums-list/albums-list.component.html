@@ -18,7 +18,7 @@
       <td>{{album.release_date}}</td>
       <td>{{album.artist.name}}</td>
       <td>
-        <div class="btn btn-primary">Voir plus</div>
+        <div class="btn btn-primary" [routerLink]="['/albums/', album.id]" routerLinkActive="activeLinkClass">Voir plus</div>
       </td>
     </tr>
     </tbody>

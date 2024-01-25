@@ -15,6 +15,8 @@ import {LoginComponent} from "./account/login/login.component";
 import { HomeComponent } from './home/home.component';
 import {HomeRoutingModule} from "./home/home-routing.module";
 import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
+import { AlbumDetailComponent } from './album-detail/album-detail.component';
+import {AlbumsRoutingModule} from "./albums-list/albums-routing.module";
 
 @NgModule({
   declarations: [
@@ -26,13 +28,15 @@ import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
     AlbumsListComponent,
     NavigationComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    AlbumDetailComponent
   ],
   imports: [
     BrowserModule,
     AccountRoutingModule,
     HomeRoutingModule,
     ArtistsRoutingModule,
+    AlbumsRoutingModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule
