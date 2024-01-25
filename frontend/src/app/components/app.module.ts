@@ -15,6 +15,7 @@ import {LoginComponent} from "./account/login/login.component";
 import { HomeComponent } from './home/home.component';
 import {HomeRoutingModule} from "./home/home-routing.module";
 import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
+import { LogoutComponent } from './account/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
     AlbumsListComponent,
     NavigationComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

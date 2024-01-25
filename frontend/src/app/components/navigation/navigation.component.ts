@@ -9,13 +9,15 @@ import {Subscription} from "rxjs";
 })
 export class NavigationComponent implements OnInit {
 
-  protected is_auth: boolean = false;
+  is_auth: boolean = false;
 
   constructor(private authService: AuthenticationService) {
   }
 
   ngOnInit() {
-    this.is_auth = this.authService.isLogged();
+    this.authService.get_auth().subscribe(auth => {
+      this.is_auth = auth;
+    });
   }
 
 }

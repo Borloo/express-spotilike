@@ -33,7 +33,8 @@ export class LoginComponent {
       this.authentication_service.login(email_form, password_form).subscribe({
         next: token => {
           localStorage.setItem('jwt', token);
-          return this.router.navigate(["/artist/list"])
+          this.authentication_service.set_auth(true);
+          return this.router.navigate(["/home"])
         },
         error: err => this.error_message = err
       });
