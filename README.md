@@ -514,6 +514,160 @@ const appService = new AppService(app, sequelize, PORT);
 appService.init_app();
 ```
 
+### Frontend
+
+1. Artist bean
+```typescript
+import {Song} from "./song";
+
+export interface Artist {
+  id: number,
+  name: string,
+  avatar: string,
+  Songs: Song[] | undefined
+}
+```
+
+2. Url service
+```typescript
+export class UrlService {
+
+    private api_url = this.app_service.get_api_url();
+
+    private artist_route = {
+        get_artists: `${this.api_url}artists`,
+        get_artists_by_id: `${this.api_url}artists/{id}`,
+        get_artists_song: `${this.api_url}artists/{id}/songs`,
+        put_artists: `${this.api_url}artists/{id}`,
+        delete_artists: `${this.api_url}artists/{id}`,
+    }
+
+    private album_route = {
+        get_albums: `${this.api_url}albums`,
+        get_album_by_id: `${this.api_url}albums/{id}`,
+        get_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+        post_album: `${this.api_url}albums`,
+        post_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+        put_album_by_id: `${this.api_url}albums/{id}`,
+        delete_album_by_id: `${this.api_url}albums/{id}`,
+    }
+
+    private user_route = {
+        post_user_login: `${this.api_url}users/login`
+    }
+
+    constructor(
+        private readonly app_service: AppService
+    ) { }
+
+    get_albums_routes(){
+        return this.album_route;
+    }
+
+    get_artists_routes(){
+        return this.artist_route;
+    }
+
+    get_users_routes() {
+        return this.user_route;
+    }
+
+    handle_error(err: HttpErrorResponse): Observable<never>{
+        let error_message: string = "";
+        if (err.error instanceof ErrorEvent){
+            error_message = `Server return code ${err.status}, error message is: ${err.message}`;
+        }
+        console.error(error_message)
+        return throwError(() => error_message);
+    }
+}
+```
+
+3. Artists service
+```typescript
+export class ArtistsService {
+
+    constructor(
+        private readonly http: HttpClient,
+        private readonly url_service: UrlService
+    ) { }
+
+    get_artists(): Observable<Artist[]>{
+        return this.http.get<Artist[]>(this.url_service.get_artists_routes().get_artists)
+            .pipe(
+                tap(data => console.log('Artists', JSON.stringify(data))),
+                catchError(this.url_service.handle_error)
+            );
+    }
+}
+```
+
+4. Artist list component
+```typescript
+export class ArtistsListComponent implements OnInit, OnDestroy{
+
+    error_message: string = "";
+    sub!: Subscription;
+
+    artists: Artist[] = [];
+
+    currentArtist!: Artist | null;
+
+    artist_id: number = 0;
+
+    constructor(
+        private readonly artists_service: ArtistsService
+    ) {
+    }
+
+    ngOnInit() {
+        this.set_artists();
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+
+    private set_artists(){
+        this.sub = this.artists_service.get_artists().subscribe({
+            next: artists => {
+                this.artists = artists;
+            },
+            error: err => this.error_message = err
+        });
+    }
+
+    setCurrentArtist(artist: Artist) {
+        this.currentArtist = null;
+        setTimeout(() => {
+            this.currentArtist = artist;
+        }, 10)
+    }
+}
+```
+
+5. Artist list template
+```html
+<div class="container">
+    <div *ngIf="artists" class="row gy-3 mt-4 justify-content-center">
+        <div *ngFor="let artist of artists" class="col-3 me-4 card-artist">
+            <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
+               [routerLink]="['/artists/', artist.id]" routerLinkActive="activeLinkClass" href="#">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="img-avatar" src="assets/avatars/{{artist.avatar}}" alt="Artist avatar">
+                </div>
+                <div class="p-2">
+                    <h3 class="m-0">
+                        {{ artist.name }}
+                    </h3>
+                    <p class="artist-annotation small">Artist</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+```
+
 ## Lancer l'application
 
 ```bash
