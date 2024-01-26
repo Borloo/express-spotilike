@@ -7,5 +7,6 @@
   </div>
   <div class="menu-item">
     <button *ngIf="!this.is_auth" [routerLink]="['/account/login']" type="button" class="btn btn-outline-success">Login</button>
+    <button *ngIf="this.is_auth" [routerLink]="['/account/logout']" type="button" class="btn btn-outline-danger">Logout</button>
   </div>
 </div>

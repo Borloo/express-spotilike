@@ -15,6 +15,7 @@ import {LoginComponent} from "./account/login/login.component";
 import { HomeComponent } from './home/home.component';
 import {HomeRoutingModule} from "./home/home-routing.module";
 import {ArtistsRoutingModule} from "./artists-list/artists-routing.module";
+import { LogoutComponent } from './account/logout/logout.component';
 import { AlbumDetailComponent } from './album-detail/album-detail.component';
 import {AlbumsRoutingModule} from "./albums-list/albums-routing.module";
 
@@ -29,7 +30,8 @@ import {AlbumsRoutingModule} from "./albums-list/albums-routing.module";
     NavigationComponent,
     LoginComponent,
     HomeComponent,
-    AlbumDetailComponent
+    AlbumDetailComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

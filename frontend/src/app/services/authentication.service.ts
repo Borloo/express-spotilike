@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {UrlService} from "./url.service";
-import {catchError, tap} from "rxjs";
+import {BehaviorSubject, catchError, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,7 @@ import {catchError, tap} from "rxjs";
 export class AuthenticationService {
 
   private is_auth: boolean = false;
+  private is_authenticated_subject = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly http: HttpClient,
@@ -32,7 +33,11 @@ export class AuthenticationService {
       );
   }
 
-  isLogged(): boolean {
-    return this.is_auth;
+  set_auth(value: boolean){
+    this.is_authenticated_subject.next(value);
+  }
+
+  get_auth(){
+    return this.is_authenticated_subject.asObservable();
   }
 }
