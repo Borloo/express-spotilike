@@ -37,13 +37,13 @@ export class AlbumDetailComponent implements OnInit {
       error: err => this.error_message = err
     });
     this.set_album();
-    this.songs = this.album.artist.Songs?.filter(song => song.album_id == this.album.id);
   }
 
   private set_album(): void {
     this.sub = this.albumService.get_by_id(this.album_id).subscribe({
       next: album => {
         this.album = album;
+        this.songs = album.artist.Songs?.filter(song => song.album_id == album.id);
       },
       error: err => this.error_message = err
     })

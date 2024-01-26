@@ -46,7 +46,7 @@ router.get('/:id', async (req, res) => {
                                 }
                             ],
                             attributes: {
-                                exclude: ['artist_id', 'album_id', 'gender_id']
+                                exclude: ['artist_id', 'gender_id']
                             }
                         }
                     ]
