@@ -3,7 +3,7 @@
     <div *ngFor="let album of albums" class="col-3 me-4 card-album">
 
       <a class="h-100 w-100"
-         [routerLink]="['/album/', album.id]" routerLinkActive="activeLinkClass" href="#">
+         [routerLink]="['/albums/', album.id]" routerLinkActive="activeLinkClass" href="#">
         <div class="d-flex justify-content-center align-items-center">
           <img class="img-cover" src="assets/covers/{{album.cover_image}}" alt="Album cover">
         </div>

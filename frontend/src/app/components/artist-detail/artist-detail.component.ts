@@ -14,7 +14,6 @@ export class ArtistDetailComponent implements OnInit{
   error_message: string = "";
   sub!: Subscription;
 
-  @Input()
   artist!: Artist;
   artist_id: string = '';
 
@@ -45,7 +44,5 @@ constructor(private artistService: ArtistService,
       error: err => this.error_message = err
     })
   }
-
-  protected readonly console = console;
 }
 
