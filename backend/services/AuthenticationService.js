@@ -33,13 +33,13 @@ class AuthenticationService {
         }
     }
 
-    async generate_hached_password(password) {
+    async generate_hashed_password(password) {
         const salt = await bcrypt.genSalt(10);
         return bcrypt.hash(password, salt);
     }
 
-    compare_password(password, form_password) {
-        return bcrypt.compare(password, form_password)
+    async compare_password(password, form_password) {
+        return await bcrypt.compare(password, form_password)
     }
 }
 

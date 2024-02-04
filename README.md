@@ -477,6 +477,12 @@ class AppService{
     }
 
     setup_express(){
+        this.app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            next();
+        });
         this.app.use(express.json())
     }
 
@@ -501,7 +507,57 @@ class AppService{
 module.exports = AppService;
 ```
 
-6. Application file
+6. Authentication service
+```javascript
+const jwt = require("jsonwebtoken");
+const secret_key = "secret_key";
+const bcrypt = require('bcryptjs');
+const {sequelize} = require("./../models");
+const {initModels} = require("../models/init-models");
+
+const { User } = initModels(sequelize);
+
+class AuthenticationService {
+
+    constructor() {
+    }
+
+    generate_token(data) {
+        return jwt.sign(data, secret_key)
+    }
+
+    async authenticate_token(req, res, next) {
+        const token = req.header('Authorization');
+        if (!token) return res.status(401).json({error: "Unauthorized"});
+        if (!token.startsWith('Bearer')) return res.status(401).json({error: "Wrong method: use bearer"});
+        const is_authorize = this.verify_token(token);
+        if (!is_authorize) return res.status(403).json({error: "Forbidden"});
+        req.user = await User.findByPk(is_authorize.user_id);
+        next();
+    }
+
+    verify_token(token) {
+        try {
+            return jwt.verify(token.split(" ")[1], secret_key);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async generate_hashed_password(password) {
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(password, salt);
+    }
+
+    async compare_password(password, form_password) {
+        return await bcrypt.compare(password, form_password)
+    }
+}
+
+module.exports = AuthenticationService
+```
+
+7. Application file
 ```javascript
 const express = require('express');
 const {sequelize} = require("./models");
@@ -521,10 +577,10 @@ appService.init_app();
 import {Song} from "./song";
 
 export interface Artist {
-  id: number,
-  name: string,
-  avatar: string,
-  Songs: Song[] | undefined
+    id: number,
+    name: string,
+    avatar: string,
+    Songs: Song[] | undefined
 }
 ```
 
@@ -583,19 +639,38 @@ export class UrlService {
 }
 ```
 
-3. Artists service
+3. Albums service
 ```typescript
-export class ArtistsService {
+import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {UrlService} from "./url.service";
+import {catchError, Observable, pipe, tap} from "rxjs";
+import {Album} from "../beans/album";
+import {Artist} from "../beans/artist";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AlbumsService {
 
     constructor(
         private readonly http: HttpClient,
         private readonly url_service: UrlService
     ) { }
 
-    get_artists(): Observable<Artist[]>{
-        return this.http.get<Artist[]>(this.url_service.get_artists_routes().get_artists)
+    get_albums(): Observable<Album[]>{
+        return this.http.get<Album[]>(this.url_service.get_albums_routes().get_albums)
             .pipe(
-                tap(data => console.log('Artists', JSON.stringify(data))),
+                tap(data => console.log('Albums', JSON.stringify(data))),
+                catchError(this.url_service.handle_error)
+            );
+    }
+
+    get_by_id(artist_id: string): Observable<Album> {
+        let url_replace = this.url_service.get_albums_routes().get_album_by_id.replace('{id}', artist_id);
+        return this.http.get<Album>(url_replace)
+            .pipe(
+                tap(data => console.log('Album', JSON.stringify(data))),
                 catchError(this.url_service.handle_error)
             );
     }
