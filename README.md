@@ -1,6 +1,6 @@
 # express-spotilike
 
-Ce projet englobe une application backend API REST Express et (bientôt) une application Angular répertoriant des 
+Ce projet englobe une application backend API REST Express et une application Angular répertoriant des 
 Artistes et affiche leurs détails. Réalisé dans le cadre du module Node.js de ma formation, ce projet se décompose en 
 plusieurs sections expliquées ci-dessous.
 
