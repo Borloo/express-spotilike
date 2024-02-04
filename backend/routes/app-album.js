@@ -3,15 +3,23 @@ const router = express.Router();
 const {initModels} = require('../models/init-models');
 const {sequelize} = require("./../models");
 const ModelService = require('./../services/ModelService');
-const JwtService = require('./../services/JwtService');
+const AuthenticationService = require('../services/AuthenticationService');
 
 const {Album, Artist, Song, Gender} = initModels(sequelize);
 const modelService = new ModelService();
-const jwtService = new JwtService();
+const authenticationService = new AuthenticationService();
 
 router.get('/', async (req, res) => {
     try {
-        const albums = await Album.findAll(modelService.get_album_model());
+        const albums = await Album.findAll({
+            attributes: {
+                exclude: ['artist_id']
+            },
+            include: {
+                model: Artist,
+                as: 'artist'
+            }
+        });
         res.status(201).json(albums);
     } catch (error) {
         console.error(error);
@@ -22,7 +30,32 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const album_id = req.params.id;
     try {
-        const album = await Album.findByPk(album_id, modelService.get_album_model());
+        const album = await Album.findByPk(album_id, {
+            include: [
+                {
+                    model: Artist,
+                    as: 'artist',
+                    include: [
+                        {
+                            model: Song,
+                            as: 'Songs',
+                            include: [
+                                {
+                                    model: Gender,
+                                    as: 'gender'
+                                }
+                            ],
+                            attributes: {
+                                exclude: ['artist_id', 'gender_id']
+                            }
+                        }
+                    ]
+                }
+            ],
+            attributes: {
+                exclude: ['artist_id']
+            }
+        });
         if (!album) {
             res.status(409).json({error: 'Unknow album id: ' + album_id});
             return;
@@ -151,7 +184,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', jwtService.authenticate_token.bind(jwtService), async (req, res) => {
+router.delete('/:id', authenticationService.authenticate_token.bind(authenticationService), async (req, res) => {
     const album_id = req.params.id;
     try {
         const album = await Album.findByPk(album_id);

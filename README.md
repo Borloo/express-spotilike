@@ -260,11 +260,11 @@ const router = express.Router();
 const {initModels} = require('../models/init-models');
 const {sequelize} = require("./../models");
 const ModelService = require('./../services/ModelService');
-const JwtService = require('./../services/JwtService');
+const AuthenticationService = require('./../services/AuthenticationService');
 
 const {Album, Artist, Song, Gender} = initModels(sequelize);
 const modelService = new ModelService();
-const jwtService = new JwtService();
+const authenticationService = new AuthenticationService();
 
 router.get('/', async (req, res) => {
     try {
@@ -408,7 +408,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', jwtService.authenticate_token.bind(jwtService), async (req, res) => {
+router.delete('/:id', authenticationService.authenticate_token.bind(authenticationService), async (req, res) => {
     const album_id = req.params.id;
     try {
         const album = await Album.findByPk(album_id);
@@ -477,6 +477,12 @@ class AppService{
     }
 
     setup_express(){
+        this.app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type');
+            next();
+        });
         this.app.use(express.json())
     }
 
@@ -501,7 +507,57 @@ class AppService{
 module.exports = AppService;
 ```
 
-6. Application file
+6. Authentication service
+```javascript
+const jwt = require("jsonwebtoken");
+const secret_key = "secret_key";
+const bcrypt = require('bcryptjs');
+const {sequelize} = require("./../models");
+const {initModels} = require("../models/init-models");
+
+const { User } = initModels(sequelize);
+
+class AuthenticationService {
+
+    constructor() {
+    }
+
+    generate_token(data) {
+        return jwt.sign(data, secret_key)
+    }
+
+    async authenticate_token(req, res, next) {
+        const token = req.header('Authorization');
+        if (!token) return res.status(401).json({error: "Unauthorized"});
+        if (!token.startsWith('Bearer')) return res.status(401).json({error: "Wrong method: use bearer"});
+        const is_authorize = this.verify_token(token);
+        if (!is_authorize) return res.status(403).json({error: "Forbidden"});
+        req.user = await User.findByPk(is_authorize.user_id);
+        next();
+    }
+
+    verify_token(token) {
+        try {
+            return jwt.verify(token.split(" ")[1], secret_key);
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async generate_hashed_password(password) {
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(password, salt);
+    }
+
+    async compare_password(password, form_password) {
+        return await bcrypt.compare(password, form_password)
+    }
+}
+
+module.exports = AuthenticationService
+```
+
+7. Application file
 ```javascript
 const express = require('express');
 const {sequelize} = require("./models");
@@ -512,6 +568,190 @@ const AppService = require("./services/AppService");
 const appService = new AppService(app, sequelize, PORT);
 
 appService.init_app();
+```
+
+### Frontend
+
+1. Artist bean
+```typescript
+import {Song} from "./song";
+
+export interface Artist {
+    id: number,
+    name: string,
+    avatar: string,
+    Songs: Song[] | undefined
+}
+```
+
+2. Url service
+```typescript
+export class UrlService {
+
+    private api_url = this.app_service.get_api_url();
+
+    private artist_route = {
+        get_artists: `${this.api_url}artists`,
+        get_artists_by_id: `${this.api_url}artists/{id}`,
+        get_artists_song: `${this.api_url}artists/{id}/songs`,
+        put_artists: `${this.api_url}artists/{id}`,
+        delete_artists: `${this.api_url}artists/{id}`,
+    }
+
+    private album_route = {
+        get_albums: `${this.api_url}albums`,
+        get_album_by_id: `${this.api_url}albums/{id}`,
+        get_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+        post_album: `${this.api_url}albums`,
+        post_album_songs_by_id: `${this.api_url}albums/{id}/songs`,
+        put_album_by_id: `${this.api_url}albums/{id}`,
+        delete_album_by_id: `${this.api_url}albums/{id}`,
+    }
+
+    private user_route = {
+        post_user_login: `${this.api_url}users/login`
+    }
+
+    constructor(
+        private readonly app_service: AppService
+    ) { }
+
+    get_albums_routes(){
+        return this.album_route;
+    }
+
+    get_artists_routes(){
+        return this.artist_route;
+    }
+
+    get_users_routes() {
+        return this.user_route;
+    }
+
+    handle_error(err: HttpErrorResponse): Observable<never>{
+        let error_message: string = "";
+        if (err.error instanceof ErrorEvent){
+            error_message = `Server return code ${err.status}, error message is: ${err.message}`;
+        }
+        console.error(error_message)
+        return throwError(() => error_message);
+    }
+}
+```
+
+3. Albums service
+```typescript
+import { Injectable } from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {UrlService} from "./url.service";
+import {catchError, Observable, pipe, tap} from "rxjs";
+import {Album} from "../beans/album";
+import {Artist} from "../beans/artist";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AlbumsService {
+
+    constructor(
+        private readonly http: HttpClient,
+        private readonly url_service: UrlService
+    ) { }
+
+    get_albums(): Observable<Album[]>{
+        return this.http.get<Album[]>(this.url_service.get_albums_routes().get_albums)
+            .pipe(
+                tap(data => console.log('Albums', JSON.stringify(data))),
+                catchError(this.url_service.handle_error)
+            );
+    }
+
+    get_by_id(artist_id: string): Observable<Album> {
+        let url_replace = this.url_service.get_albums_routes().get_album_by_id.replace('{id}', artist_id);
+        return this.http.get<Album>(url_replace)
+            .pipe(
+                tap(data => console.log('Album', JSON.stringify(data))),
+                catchError(this.url_service.handle_error)
+            );
+    }
+}
+```
+
+4. Artist list component
+```typescript
+export class ArtistsListComponent implements OnInit, OnDestroy{
+
+    error_message: string = "";
+    sub!: Subscription;
+
+    artists: Artist[] = [];
+
+    currentArtist!: Artist | null;
+
+    artist_id: number = 0;
+
+    constructor(
+        private readonly artists_service: ArtistsService
+    ) {
+    }
+
+    ngOnInit() {
+        this.set_artists();
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+
+    private set_artists(){
+        this.sub = this.artists_service.get_artists().subscribe({
+            next: artists => {
+                this.artists = artists;
+            },
+            error: err => this.error_message = err
+        });
+    }
+
+    setCurrentArtist(artist: Artist) {
+        this.currentArtist = null;
+        setTimeout(() => {
+            this.currentArtist = artist;
+        }, 10)
+    }
+}
+```
+
+5. Artist list template
+```html
+<div class="container">
+    <div *ngIf="artists" class="row gy-3 mt-4 justify-content-center">
+        <div *ngFor="let artist of artists" class="col-3 me-4 card-artist">
+            <a class="h-100 w-100" (click)="setCurrentArtist(artist)"
+               [routerLink]="['/artists/', artist.id]" routerLinkActive="activeLinkClass" href="#">
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="img-avatar" src="assets/avatars/{{artist.avatar}}" alt="Artist avatar">
+                </div>
+                <div class="p-2">
+                    <h3 class="m-0">
+                        {{ artist.name }}
+                    </h3>
+                    <p class="artist-annotation small">Artist</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+```
+
+## Lancer l'application
+
+```bash
+npm run start_backend
+```
+
+Puis dans un autre terminal
+```bash
+npm run start_frontend
 ```
 
 ## Tester l'API
